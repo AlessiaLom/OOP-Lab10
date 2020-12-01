@@ -41,41 +41,23 @@ public class ConcurrentGUI extends JFrame {
         final Agent agent = new Agent();
         new Thread(agent).start();
 
-        stop.addActionListener(new ActionListener() {
-            /**
-             * event handler associated to action event on button stop.
-             * 
-             * @param e
-             *            the action event that will be handled by this listener
-             */
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-
+        stop.addActionListener(e -> {
                 agent.stopCounting();
                 stop.setEnabled(false);
                 up.setEnabled(false);
                 down.setEnabled(false);
-            }
-        });
+            });
 
-        up.addActionListener(new ActionListener() {
-            public void actionPerformed(final ActionEvent e) {
-                agent.upCounting();
-            }
-        });
+        up.addActionListener(e -> agent.upCounting());           
 
-        down.addActionListener(new ActionListener() {
-            public void actionPerformed(final ActionEvent e) {
-                agent.downCounting();
-            }
-        });
+        down.addActionListener(e -> agent.downCounting());
     }
 
 
     private class Agent implements Runnable {
 
         private volatile boolean stop;
-        private volatile int counter;
+        private int counter;
         private volatile boolean up = true;
 
         @Override
@@ -84,11 +66,7 @@ public class ConcurrentGUI extends JFrame {
                 try {
 
                     SwingUtilities.invokeAndWait(() -> ConcurrentGUI.this.display.setText(Integer.toString(Agent.this.counter)));
-                    if (up) {
-                        this.counter++;
-                    } else {
-                        this.counter--;
-                    }
+                    counter += (up ? 1 : -1);
 
                     Thread.sleep(100);
                 } catch (InvocationTargetException | InterruptedException ex) {
