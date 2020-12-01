@@ -16,7 +16,7 @@ public class AnotherConcurrentGUI extends JFrame {
     private static final long serialVersionUID = 1L;
     private static final double WIDTH_PERC = 0.2;
     private static final double HEIGHT_PERC = 0.1;
-    private static final int TIME = 10000;
+    private static final int TIME = 10_000;
     private final JLabel display = new JLabel();
     private final JButton stop = new JButton("stop");
     private final JButton up = new JButton("up");
@@ -62,17 +62,17 @@ public class AnotherConcurrentGUI extends JFrame {
         down.addActionListener(e -> agent.downCounting());
 
     }
-        private void stopCounting() {
+    private void stopCounting() {
             stop.setEnabled(false);
             up.setEnabled(false);
             down.setEnabled(false);
             agent.stopCounting();
-        }
+    }
 
     private class Agent implements Runnable {
 
         private volatile boolean stop;
-        private int counter;
+        private volatile int counter;
         private volatile boolean up = true;
 
         @Override
@@ -81,7 +81,7 @@ public class AnotherConcurrentGUI extends JFrame {
                 try {
 
                     SwingUtilities.invokeAndWait(() -> AnotherConcurrentGUI.this.display.setText(Integer.toString(Agent.this.counter)));
-                    counter += (up ? 1 : -1);
+                    counter += up ? 1 : -1;
 
                     Thread.sleep(100);
                 } catch (InvocationTargetException | InterruptedException ex) {
